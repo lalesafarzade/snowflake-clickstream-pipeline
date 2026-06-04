@@ -1,0 +1,1 @@
+SHOW PIPES LIKE 'stock_snowpipe';
