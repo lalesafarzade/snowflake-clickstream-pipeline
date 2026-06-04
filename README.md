@@ -1,9 +1,4 @@
-# snowflake-clickstream-pipeline
-Here is the complete project documentation formatted cleanly as a single, copy-pasteable Markdown (.md) file.
 
-You can copy the code block below and save it directly as README.md in your project's root folder:
-
-Markdown
 # 📈 Live Stock Market Data Pipeline & Dashboard
 
 An end-to-end, near-real-time data engineering pipeline that extracts live financial data from a third-party Stock API, stages the raw payloads in Amazon S3, automatically ingests them into Snowflake using event-driven Snowpipe, and visualizes the results via an embedded Snowflake Streamlit application.
