@@ -45,9 +45,9 @@ The extraction script connects to the target API and creates uniquely named file
 execute every sql file in oredr.
 
 ⚠️ Crucial AWS S3 Linkage: Run SHOW PIPES LIKE 'stock_snowpipe'; in Snowflake and copy the ARN string from the notification_channel column. Paste this ARN into your AWS S3 Bucket ➔ Properties ➔ Event Notifications tool targeted at all object creation events.
-![Image Screenshot](images\result_table.JPG)
+![Image Screenshot](images/result_table.JPG)
 
 ### 3. Deploying the Streamlit Dashboard
 Navigate to the Projects ➔ Streamlit tab inside your Snowflake account console, spin up a new application and run the streamlite.py inside the snowflake and deploy it.
 
-![Dashboard Screenshot](images\streamlite_dash.JPG)
+![Dashboard Screenshot](images/streamlite_dash.JPG)
