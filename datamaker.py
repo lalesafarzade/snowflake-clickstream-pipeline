@@ -6,11 +6,11 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 from config import API_KEY
 
-S3_BUCKET_NAME = "stock-market-alpha-vantage"  # <-- Your bucket
-ALPHA_VANTAGE_KEY = API_KEY      # <-- Your API Key
-BATCH_SIZE = 5  # Upload to S3 after gathering data for 5 tickers
+S3_BUCKET_NAME = "stock-market-alpha-vantage"  
+ALPHA_VANTAGE_KEY = API_KEY     
+BATCH_SIZE = 5  
 
-# Watchlist of tickers to rotate through
+
 TICKERS = ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA", "META", "NFLX"]
 
 # Initialize S3 Client
@@ -29,7 +29,7 @@ def fetch_stock_quote(symbol):
             if "Global Quote" in raw_data and raw_data["Global Quote"]:
                 quote = raw_data["Global Quote"]
                 
-                # Transform the weird "1. symbol" keys into clean JSON fields
+                # Transform into clean JSON fields
                 clean_record = {
                     "symbol": quote.get("01. symbol"),
                     "open": float(quote.get("02. open", 0)),
@@ -66,14 +66,14 @@ def upload_batch_to_s3(batch_data):
             Body=json_lines_body,
             ContentType='application/json'
         )
-        print(f"📦 Successfully uploaded {len(batch_data)} stock records to S3: {s3_key}")
+        print(f"Successfully uploaded {len(batch_data)} stock records to S3: {s3_key}")
     except NoCredentialsError:
-        print("❌ AWS Credentials not found.")
+        print("AWS Credentials not found.")
     except Exception as e:
-        print(f"❌ S3 Upload failed: {e}")
+        print(f"S3 Upload failed: {e}")
 
 def main():
-    print(f"📈 Starting Real Stock Data Stream to S3...")
+    print(f"Starting Real Stock Data Stream to S3...")
     
     stock_batch = []
     ticker_index = 0
@@ -86,25 +86,25 @@ def main():
             stock_data = fetch_stock_quote(symbol)
             if stock_data:
                 stock_batch.append(stock_data)
-                print(f"✅ Added {symbol} at ${stock_data['price']} to batch.")
+                print(f"Added {symbol} at ${stock_data['price']} to batch.")
             
-            # If batch is full, ship it to S3
+          
             if len(stock_batch) >= BATCH_SIZE:
                 upload_batch_to_s3(stock_batch)
                 stock_batch = []
             
-            # Rotate to next ticker
+         
             ticker_index = (ticker_index + 1) % len(TICKERS)
             
-            # Free tier friendly wait limit (Alpha Vantage allows 5 requests/min, so wait ~15s per hit)
-            print("⏳ Sleeping 15 seconds to respect free API limits...")
+           
+            print(" Sleeping 15 seconds to respect free API limits...")
             time.sleep(15)
             
     except KeyboardInterrupt:
         if stock_batch:
             print("\nFlushing final stock records to S3...")
             upload_batch_to_s3(stock_batch)
-        print("🛑 Stock stream paused.")
+        print("Stock stream paused.")
 
 if __name__ == "__main__":
     main()
